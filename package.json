@@ -27,7 +27,7 @@
     "@nestjs/platform-express": "^8.0.0",
     "@nestjs/swagger": "^5.2.1",
     "@types/ioredis": "^4.28.10",
-    "be-core": "^0.0.21",
+    "be-core": "^0.0.28",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.13.2",
     "ioredis": "^5.0.6",
@@ -72,7 +72,8 @@
     ],
     "moduleNameMapper": {
       "^src/(.*)$": "<rootDir>/$1",
-      "^config/(.*)$": "<rootDir>/../config/$1"
+      "^config/(.*)$": "<rootDir>/../config/$1",
+      "^@modules/(.*)$": "<rootDir>/modules/$1"
     },
     "rootDir": "src",
     "testRegex": ".*\\.spec\\.ts$",

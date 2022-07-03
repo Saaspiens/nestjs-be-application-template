@@ -2,13 +2,14 @@ import { Body, Controller, Delete, Get, Injectable, Post, Put, Scope, UseInterce
 import { AddCommand, DeleteCommand, UpdateCommand } from "./commands";
 import { ApiBody, ApiParam, ApiTags } from "@nestjs/swagger";
 import { REQUEST } from "@nestjs/core";
-import { Authorization, BaseController, BusinessException, CoreResponseInterceptor, Mediator, Permissions } from "be-core";
+import { Authorization, BaseController, BusinessException, CoreResponseInterceptor, Mediator, Permissions, Headers } from "be-core";
 import { ExampleQueries } from "@modules/shared/queries/example.queries";
 
 @Controller('/core/v1/example')
 @Injectable({ scope: Scope.REQUEST })
 @UseInterceptors(CoreResponseInterceptor)
 @ApiTags('Example')
+@Headers()
 export class ExampleController extends BaseController {
 
     constructor(
@@ -50,7 +51,7 @@ export class ExampleController extends BaseController {
     @ApiBody({ type: DeleteCommand })
     @Authorization('exampleManagement', Permissions.Delete)
     async delete(@Body() command: DeleteCommand) {
-        return this.mediator.send(new DeleteCommand(command.id));
+        return this.mediator.send(command);
     }
 
     @Get('system-error')

@@ -23,7 +23,10 @@ export class DeleteCommandHandler extends BaseCommandHandler<DeleteCommand, Exam
 
     async apply(command: DeleteCommand): Promise<ExampleModel> {
         let data = await this.exampleQueries.get(command.id)
-        data = await this.deleteBuild(data, command.session);
-        return this.exampleRepository.update(data);
+        if (data && !data.isDeleted) {
+            data = await this.deleteBuild(data, command.session);
+            return this.exampleRepository.update(data);
+        }
+        return data;
     }
 }
