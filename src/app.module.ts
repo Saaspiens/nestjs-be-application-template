@@ -24,7 +24,9 @@ console.log(__dirname + '/modules/shared/models/*{.ts,.js}')
           entities: [
             __dirname + '/modules/shared/models/*{.ts,.js}'
           ], 
-          synchronize: false
+          synchronize: false,
+          retryAttempts: 3,
+          retryDelay: 1000
         } 
       },
       inject: [REQUEST]
