@@ -1,3 +1,4 @@
+import { ExampleModel } from '@modules/shared/models/example.model';
 import { ExampleQueries } from '@modules/shared/queries/example.queries';
 import { REQUEST } from '@nestjs/core';
 import { Test } from '@nestjs/testing';
@@ -6,100 +7,99 @@ import { AddCommand, DeleteCommand, UpdateCommand } from './commands';
 import { ExampleController } from './example.controller';
 
 describe('Example controller test', () => {
-  beforeEach(() => {
-    jest.resetAllMocks()
-  })
+    beforeEach(() => {
+        jest.resetAllMocks();
+    });
 
-  let controller: ExampleController
+    let controller: ExampleController;
 
-  const mediator = {
-    send: jest.fn()
-  }
+    const mediator = {
+        send: jest.fn(),
+    };
 
-  const mediatorProvider = {
-    provide: Mediator,
-    useFactory: () => mediator,
-  }
+    const mediatorProvider = {
+        provide: Mediator,
+        useFactory: () => mediator,
+    };
 
-  const exampleQueries = {
-    get: jest.fn(),
-    gets: jest.fn()
-  };
+    const exampleQueries = {
+        get: jest.fn(),
+        gets: jest.fn(),
+    };
 
-  const exampleQueriesProvider = {
-    provide: ExampleQueries,
-    useFactory: () => exampleQueries,
-  }
+    const exampleQueriesProvider = {
+        provide: ExampleQueries,
+        useFactory: () => exampleQueries,
+    };
 
-  const requestMock = {
-      scopeVariable: {
-        accessToken: 'token'
-      }
-  }
+    const requestMock = {
+        scopeVariable: {
+            accessToken: 'token',
+        },
+    };
 
-  const requestProvider = {
-      provide: REQUEST,
-      useFactory: () => requestMock
-  }
+    const requestProvider = {
+        provide: REQUEST,
+        useFactory: () => requestMock,
+    };
 
-  beforeEach(async () => {
-    const moduleRef = await Test.createTestingModule({
-      providers: [requestProvider, mediatorProvider, exampleQueriesProvider, ExampleController],
-    }).compile()
+    beforeEach(async () => {
+        const moduleRef = await Test.createTestingModule({
+            providers: [requestProvider, mediatorProvider, exampleQueriesProvider, ExampleController],
+        }).compile();
 
-    controller = await moduleRef.resolve<ExampleController>(ExampleController)
-    controller.getUserSession = jest.fn().mockReturnValue({
-      roles: [{
-        name: 'Administrator'
-      }]
-    }) // Mock Administrator to test function without permission
-  })
+        controller = await moduleRef.resolve<ExampleController>(ExampleController);
+        controller.getUserSession = jest.fn().mockReturnValue({
+            roles: [
+                {
+                    name: 'Administrator',
+                },
+            ],
+        }); // Mock Administrator to test function without permission
+    });
 
-  test('Get function. Should run as expected', async () => {
-    await controller.get(1)
+    test('Get function. Should run as expected', async () => {
+        await controller.get(1);
 
-    expect(exampleQueries.get).toBeCalledTimes(1)
-    expect(exampleQueries.get).toBeCalledWith(1)
-  })
+        expect(exampleQueries.get).toBeCalledTimes(1);
+        expect(exampleQueries.get).toBeCalledWith(1);
+    });
 
-  test('Gets function. Should run as expected', async () => {
-    await controller.gets()
+    test('Gets function. Should run as expected', async () => {
+        await controller.gets();
 
-    expect(exampleQueries.gets).toBeCalledTimes(1)
-  })
+        expect(exampleQueries.gets).toBeCalledTimes(1);
+    });
 
-  test('Add function. Should run as expected', async () => {
+    test('Add function. Should run as expected', async () => {
+        const data = new AddCommand({
+            data: 'name',
+        } as unknown as ExampleModel);
 
-    const data = new AddCommand({
-      data: 'name'
-    } as any)
+        await controller.add(data);
 
-    await controller.add(data)
+        expect(mediator.send).toBeCalledTimes(1);
+        expect(mediator.send).toBeCalledWith(data);
+    });
 
-    expect(mediator.send).toBeCalledTimes(1)
-    expect(mediator.send).toBeCalledWith(data)
-  })
+    test('Update function. Should run as expected', async () => {
+        const data = new UpdateCommand({
+            id: 1,
+            data: 'name',
+        } as unknown as ExampleModel);
 
-  test('Update function. Should run as expected', async () => {
+        await controller.add(data);
 
-    const data = new UpdateCommand({
-      id: 1,
-      data: 'name'
-    } as any)
+        expect(mediator.send).toBeCalledTimes(1);
+        expect(mediator.send).toBeCalledWith(data);
+    });
 
-    await controller.add(data)
+    test('Delete function. Should run as expected', async () => {
+        const data = new DeleteCommand(1);
 
-    expect(mediator.send).toBeCalledTimes(1)
-    expect(mediator.send).toBeCalledWith(data)
-  })
+        await controller.delete(data);
 
-  test('Delete function. Should run as expected', async () => {
-
-    const data = new DeleteCommand(1)
-
-    await controller.delete(data)
-
-    expect(mediator.send).toBeCalledTimes(1)
-    expect(mediator.send).toBeCalledWith(data)
-  })
-})
+        expect(mediator.send).toBeCalledTimes(1);
+        expect(mediator.send).toBeCalledWith(data);
+    });
+});

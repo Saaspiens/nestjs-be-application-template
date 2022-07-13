@@ -1,5 +1,3 @@
-import { ExampleQueries } from './example.queries'
+import { ExampleQueries } from './example.queries';
 
-export default [
-    ExampleQueries
-]
+export default [ExampleQueries];
