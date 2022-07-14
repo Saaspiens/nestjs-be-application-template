@@ -5,6 +5,10 @@ import { AppModule } from './app.module';
 
 async function bootstrap() {
     const app = await NestFactory.create(AppModule);
+    app.enableCors({
+        origin: 'icc.example.vn',
+        credentials: true,
+    });
     const config = new DocumentBuilder()
         .setTitle('Example')
         .setDescription('The core api document for example')

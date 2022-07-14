@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { REQUEST } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { InitialModule, AuthModule } from 'be-core';
+import { AuthModule, InitialModule } from 'be-core';
 import { load } from './config';
 @Module({
     imports: [
