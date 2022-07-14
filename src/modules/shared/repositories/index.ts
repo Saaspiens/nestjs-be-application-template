@@ -1,5 +1,3 @@
-import { ExampleRepository } from './example.repository'
+import { ExampleRepository } from './example.repository';
 
-export default [
-    ExampleRepository
-]
+export default [ExampleRepository];
