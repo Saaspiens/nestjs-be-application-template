@@ -5,7 +5,19 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule, InitialModule } from 'be-core';
 import { DataSource } from 'typeorm';
 import { load } from './config';
-let dataSource: DataSource;
+
+let dataSource = new DataSource({
+    type: 'mysql',
+    host: 'localhost',
+    port: 3306,
+    username: 'root',
+    password: '',
+    database: 'icc_comatic',
+    entities: [__dirname + '/modules/shared/models/*{.ts,.js}'],
+    migrations: [__dirname + '/migrations/*.{ts,js}'],
+    synchronize: false,
+});
+
 @Module({
     imports: [
         InitialModule,
@@ -41,3 +53,4 @@ let dataSource: DataSource;
     ],
 })
 export class AppModule {}
+export { dataSource };
