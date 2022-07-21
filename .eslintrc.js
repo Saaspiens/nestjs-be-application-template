@@ -1,11 +1,12 @@
 module.exports = {
     root: true,
     parser: '@typescript-eslint/parser',
-    plugins: ['@typescript-eslint'],
     parserOptions: {
+        project: './tsconfig.json',
         tsconfigRootDir: __dirname,
-        project: ['./tsconfig.json'],
+        sourceType: 'module',
     },
+    plugins: ['@typescript-eslint'],
     settings: {
         'import/resolver': {
             typescript: {
@@ -21,6 +22,11 @@ module.exports = {
         'plugin:import/recommended',
         'plugin:import/typescript',
     ],
+    env: {
+        node: true,
+        jest: true,
+    },
+    ignorePatterns: ['.eslintrc.js', 'prettier.config.js', 'dist'],
     rules: {
         'import/no-named-as-default-member': 'off',
         'import/no-named-as-default': 'off',

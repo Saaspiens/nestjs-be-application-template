@@ -3,7 +3,9 @@ import { ConfigModule } from '@nestjs/config';
 import { REQUEST } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule, InitialModule } from 'be-core';
+import { DataSource } from 'typeorm';
 import { load } from './config';
+let dataSource: DataSource;
 @Module({
     imports: [
         InitialModule,
@@ -26,6 +28,13 @@ import { load } from './config';
                     retryAttempts: 3,
                     retryDelay: 1000,
                 };
+            },
+            dataSourceFactory: async (option) => {
+                if (dataSource && dataSource.isInitialized) {
+                    await dataSource.destroy();
+                }
+                dataSource = new DataSource(option!);
+                return await dataSource.initialize();
             },
             inject: [REQUEST],
         }),
