@@ -1,27 +1,24 @@
-import { Module } from '@nestjs/common';
+import { Module, Scope } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { REQUEST } from '@nestjs/core';
+import { APP_INTERCEPTOR, REQUEST } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { AuthModule, InitialModule } from 'be-core';
+import { AuthModule, CoreResponseInterceptor, InitialModule } from 'be-core';
 import { DataSource } from 'typeorm';
 import { load } from './config';
-
-let dataSource = new DataSource({
+const dataSource = new DataSource({
     type: 'mysql',
-    host: 'localhost',
-    port: 3306,
-    username: 'root',
-    password: '',
-    database: 'icc_comatic',
-    entities: [__dirname + '/modules/shared/models/*{.ts,.js}'],
+    host: '172.16.0.110',
+    port: 6003,
+    username: 'dev',
+    password: 'comatic_dev@2022',
+    database: 'comatic_icc',
+    entities: [__dirname + '/modules/**/**.config.{ts,js}'],
     migrations: [__dirname + '/migrations/*.{ts,js}'],
     synchronize: false,
 });
 
 @Module({
     imports: [
-        InitialModule,
-        AuthModule,
         ConfigModule.forRoot({
             load: [load],
             isGlobal: true,
@@ -35,21 +32,23 @@ let dataSource = new DataSource({
                     username: request.scopeVariable.primary.username,
                     password: request.scopeVariable.primary.password,
                     database: request.scopeVariable.primary.database,
-                    entities: [__dirname + '/modules/shared/models/*{.ts,.js}'],
+                    entities: [__dirname + '/modules/**/**.config.{ts,js}'],
                     synchronize: false,
                     retryAttempts: 3,
                     retryDelay: 1000,
                 };
             },
-            dataSourceFactory: async (option) => {
-                if (dataSource && dataSource.isInitialized) {
-                    await dataSource.destroy();
-                }
-                dataSource = new DataSource(option!);
-                return await dataSource.initialize();
-            },
             inject: [REQUEST],
         }),
+        InitialModule,
+        AuthModule,
+    ],
+    providers: [
+        {
+            provide: APP_INTERCEPTOR,
+            useClass: CoreResponseInterceptor,
+            scope: Scope.REQUEST,
+        },
     ],
 })
 export class AppModule {}

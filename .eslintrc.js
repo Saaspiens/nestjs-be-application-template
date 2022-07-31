@@ -2,9 +2,8 @@ module.exports = {
     root: true,
     parser: '@typescript-eslint/parser',
     parserOptions: {
-        project: './tsconfig.json',
         tsconfigRootDir: __dirname,
-        sourceType: 'module',
+        project: ['./tsconfig.json'],
     },
     plugins: ['@typescript-eslint'],
     settings: {
@@ -31,16 +30,16 @@ module.exports = {
         'import/no-named-as-default-member': 'off',
         'import/no-named-as-default': 'off',
         '@typescript-eslint/no-redeclare': ['error'],
-        'no-useless-catch': 'off',
 
         'no-unused-vars': 'off',
-        '@typescript-eslint/no-unused-vars': 'off',
+        '@typescript-eslint/no-unused-vars': ['error'],
         '@typescript-eslint/no-unsafe-assignment': 'off',
-        // '@typescript-eslint/no-unsafe-return': 'off',
+        '@typescript-eslint/no-unsafe-return': 'off',
         '@typescript-eslint/no-unsafe-call': 'off',
         '@typescript-eslint/no-unsafe-member-access': 'off',
-        // '@typescript-eslint/no-unsafe-argument': 'off',
-        // '@typescript-eslint/no-this-alias': 'off',
+        '@typescript-eslint/no-unsafe-argument': 'off',
+        '@typescript-eslint/no-this-alias': 'off',
+        '@typescript-eslint/no-floating-promises': 'off',
 
         '@typescript-eslint/no-empty-interface': ['error'],
         '@typescript-eslint/no-non-null-assertion': 'off',
